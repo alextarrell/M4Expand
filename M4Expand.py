@@ -11,8 +11,10 @@ class M4Expand(sublime_plugin.WindowCommand):
 			tf.write(text)
 			tf.close()
 
-			res = subprocess.check_output(["m4", tf.name])
-			res = res.decode('utf-8')
+			res = subprocess.check_output(["m4", tf.name],
+			                              stderr=subprocess.STDOUT,
+			                              cwd=os.path.dirname(os.path.abspath(active_view.file_name())))
+			res = res.decode('utf-8').replace('\r', '').strip()
 
 			panel_name = "m4expand.results"
 			panel = self.window.create_output_panel(panel_name)
